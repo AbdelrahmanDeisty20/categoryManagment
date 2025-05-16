@@ -12,7 +12,9 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
+        //here for search
         $search = $request->get('search');
+        //bring al categories from database
         $allCategories = Category::all();
         $filtered = $search
             ? Category::where('name', 'like', "%$search%")->get()
@@ -33,6 +35,7 @@ class CategoryController extends Controller
     }
     public function store(CategoryRequest $request)
     {
+        //here save new category
         Category::create(
            $request->validated()
         );
@@ -43,7 +46,9 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request)
     {
+        //here find item category
         $category = Category::find($request->id);
+        //here update category
         $category->update(
             $request->validated()
         );
@@ -51,10 +56,12 @@ class CategoryController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // CRUD functions (store, update, delete) هنا تضعهم كما في كودك السابق
 
 
     public function destroy(Request $request)
     {
+        //here for button delete has name:ids
         if ($request->has('ids')) {
             // حذف جماعي
             Category::whereIn('id', $request->ids)->delete();

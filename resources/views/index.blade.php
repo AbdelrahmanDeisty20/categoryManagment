@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- categroies information in tree --}}
     <div class="row">
         <div class="col-md-3">
             <h5>شجرة التصنيفات</h5>
@@ -21,54 +22,52 @@
         </div>
 
         <div class="col-md-9">
+            {{-- for adding new category --}}
             <button class="btn btn-success mb-2" id="addBtn">إضافة تصنيف</button>
             <input type="text" id="searchInput" value="{{ $search }}" placeholder="بحث" class="form-control mb-2" />
             <div class="tableContainer">
-                <form id="deleteForm">
-                    <table class="table">
-                        <thead>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>#</th>
+                            <th>الاسم</th>
+                            <th>التصنيف الأب</th>
+                            <th>تعديل</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($categories as $index => $cat)
                             <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
-                                <th>#</th>
-                                <th>الاسم</th>
-                                <th>التصنيف الأب</th>
-                                <th>تعديل</th>
-                                <th>حذف</th>
+                                <td><input type="checkbox" name="ids[]" value="{{ $cat->id }}"></td>
+                                <td>{{ ($current_page - 1) * 5 + $index + 1 }}</td>
+                                <td>{{ $cat->name }}</td>
+                                <td>{{ optional($cat->parent)->name }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning editBtn" data-id="{{ $cat->id }}"
+                                        data-name="{{ $cat->name }}"
+                                        data-parent="{{ $cat->parent_id }}">تعديل</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger deleteBtn"
+                                        data-id="{{ $cat->id }}">حذف</button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($categories as $index => $cat)
-                                <tr>
-                                    <td><input type="checkbox" name="ids[]" value="{{ $cat->id }}"></td>
-                                    <td>{{ ($current_page - 1) * 5 + $index + 1 }}</td>
-                                    <td>{{ $cat->name }}</td>
-                                    <td>{{ optional($cat->parent)->name }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-warning editBtn" data-id="{{ $cat->id }}"
-                                            data-name="{{ $cat->name }}"
-                                            data-parent="{{ $cat->parent_id }}">تعديل</button>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger deleteBtn"
-                                            data-id="{{ $cat->id }}">حذف</button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <button type="submit" class="btn btn-danger">حذف المحدد</button>
-                </form>
-
-                <div class="mt-3">
-                    @php
-                        include base_path('resources/views/categories-pagination.php');
-                    @endphp
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+
+            {{-- خلي الفورم هنا خارج الجدول والـ div --}}
+            <form id="deleteForm" class="mt-2">
+                <button type="submit" class="btn btn-danger">حذف المحدد</button>
+            </form>
+
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal  for adding new category -->
     <div class="modal" id="categoryModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -175,8 +174,8 @@
                         ids: Array.from(selectedIds)
                     },
                     success: function() {
-                        selectedIds.clear();
-                        location.reload();
+                        selectedIds.clear(); // امسح بعد الحذف
+                        location.reload(); // جدد الجدول بعد الحذف
                     }
                 });
             });
