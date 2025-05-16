@@ -51,7 +51,6 @@ class CategoryController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // CRUD functions (store, update, delete) هنا تضعهم كما في كودك السابق
 
 
     public function destroy(Request $request)

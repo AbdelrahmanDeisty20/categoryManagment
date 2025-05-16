@@ -175,8 +175,8 @@
                         ids: Array.from(selectedIds)
                     },
                     success: function() {
-                        selectedIds.clear(); // امسح بعد الحذف
-                        location.reload(); // جدد الجدول بعد الحذف
+                        selectedIds.clear();
+                        location.reload();
                     }
                 });
             });
